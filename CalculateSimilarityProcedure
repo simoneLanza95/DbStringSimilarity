@@ -1,0 +1,49 @@
+ALTER PROCEDURE [dbo].[CalculateSimilarityProcedure]
+  @input VARCHAR(50),
+	@inputSimilarity decimal(5,4),
+	@threshold int
+AS
+BEGIN
+    IF OBJECT_ID('tempdb..#Results') IS NOT NULL
+        DROP TABLE #Results;
+    
+    IF OBJECT_ID('tempdb..#Final') IS NOT NULL
+        DROP TABLE #Final;
+
+    DECLARE @ThreeLetter VARCHAR(50) = LEFT(@input, 3);
+
+	CREATE TABLE #Results (
+    name NVARCHAR(200),
+    similarity DECIMAL(5, 4)
+	);
+
+	CREATE TABLE #Final (
+    FORSE_CERCAVI NVARCHAR(200),
+    SIMILARITY DECIMAL(5, 4),
+    ID INT
+	);
+
+    WITH GroupedSimilarity AS (
+        SELECT name, dbo.CalculateSimilarity(name, @input, @threshold) AS similarity
+        FROM dbo.Customers_Partitioned
+        WHERE dbo.Customers_Partitioned.ThreeLetter = @ThreeLetter
+        GROUP BY name
+    )
+	
+    INSERT INTO #Results (name, similarity)
+    SELECT DISTINCT gs.name, gs.similarity
+    FROM GroupedSimilarity gs
+    WHERE gs.similarity >= @inputSimilarity;
+
+    INSERT INTO #Final (FORSE_CERCAVI, SIMILARITY, ID)
+    SELECT r.name AS FORSE_CERCAVI, r.similarity AS SIMILARITY, c.id AS ID
+    FROM #Results r
+    JOIN dbo.Customers_Partitioned c ON r.name = c.name;
+
+    SELECT FORSE_CERCAVI, SIMILARITY, ID
+    FROM #Final
+    ORDER BY SIMILARITY DESC;
+
+    DROP TABLE #Results;
+    DROP TABLE #Final;
+END;
