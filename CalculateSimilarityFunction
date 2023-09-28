@@ -1,0 +1,13 @@
+ALTER FUNCTION [dbo].[CalculateSimilarity](@inputString NVARCHAR(MAX), @s2 NVARCHAR(350), @threshold INT) RETURNS FLOAT
+AS
+BEGIN
+	DECLARE @distance INT = dbo.CalculateWordJaccardSimilarity(@inputString, @s2);
+
+	IF @distance > @threshold
+        RETURN 0.0;
+
+    DECLARE @maxDistance INT = GREATEST(LEN(@inputString), LEN(@s2));
+	DECLARE @similarity FLOAT = (1 - (1.0 * @distance / @maxDistance));
+
+	RETURN ROUND(@similarity,4);
+END;
