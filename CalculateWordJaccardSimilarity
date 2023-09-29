@@ -1,0 +1,28 @@
+ALTER FUNCTION [dbo].[CalculateWordJaccardSimilarity] (@word1 NVARCHAR(MAX), @word2 NVARCHAR(MAX))
+RETURNS INT
+AS
+BEGIN
+    DECLARE @maxLength INT = GREATEST(LEN(@word1), LEN(@word2));
+    DECLARE @minLength INT = LEAST(LEN(@word1), LEN(@word2));
+    DECLARE @count INT = ABS(LEN(@word1) - LEN(@word2));
+    DECLARE @i INT = 1;
+
+	IF @count >= 6
+	BEGIN
+		RETURN @count;
+	END;
+
+    WHILE @i <= @minLength
+    BEGIN
+        IF SUBSTRING(@word1, @i, 1) <> SUBSTRING(@word2, @i, 1)
+        BEGIN
+            SET @count = @count + 1;
+            IF @count > @minLength
+                BREAK;
+        END
+
+        SET @i = @i + 1;
+    END;
+
+    RETURN @count;
+END;
