@@ -18,7 +18,7 @@ The CalculateSimilarity function uses the CalculateWordJaccardSimilarity functio
 
 ### Customers Table
 
-The `Customers` table is the primary dataset for name comparisons. It contains 50+ million records so I've decided to create the `Customers_Partitioned` table with an additional column, `ThreeLetter`, that is filled with the firstthree letters of the `name` column. 
+The `Customers` table is the primary dataset for name comparisons. It contains 50+ million records so I've decided to create the `Customers_Partitioned` table with an additional column, `ThreeLetter`, that is filled with the first three letters of the `name` column. 
 Using partition function and scheme on the ThreeLetter column the new `Customers_Partitioned` table will be correcly divided in partitions based on a range of combinations of three letters.
 
 ### Partition Function and Scheme
@@ -36,7 +36,7 @@ In summary, the partition function and scheme play a crucial role in managing an
 ### Indexes
 
 A nonclustered columnstore index is created on the `name` column of the `Customers_Partitioned` table. Columnstore indexes are well-suited for large datasets and analytical workloads. They can help accelerate queries that involve string similarity calculations.
-I've also used a nonclustered index on ThreeLetter column that includes the name column and other indexes if there's the need to retrieve other infos about the result records.
+I've also used a nonclustered index on `ThreeLetter` column that includes the `name` column and other indexes if there's the need to retrieve other infos about the result records.
 
 ## Usage
 
