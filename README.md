@@ -18,7 +18,7 @@ The CalculateSimilarity function uses the CalculateWordJaccardSimilarity functio
 
 ### Customers Table
 
-The `Customers` table is the primary dataset for name comparisons. It contains 50+ million records so I've decided to create the `Customers_Partitioned` table with an additional column, `ThreeLetter`, that is filled with the firstthree letters of the name column. 
+The `Customers` table is the primary dataset for name comparisons. It contains 50+ million records so I've decided to create the `Customers_Partitioned` table with an additional column, `ThreeLetter`, that is filled with the firstthree letters of the `name` column. 
 Using partition function and scheme on the ThreeLetter column the new `Customers_Partitioned` table will be correcly divided in partitions based on a range of combinations of three letters.
 
 ### Partition Function and Scheme
