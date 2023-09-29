@@ -1,4 +1,3 @@
-```sql
 ALTER FUNCTION [dbo].[CalculateSimilarity](@inputString NVARCHAR(MAX), @s2 NVARCHAR(350), @threshold INT) RETURNS FLOAT
 AS
 BEGIN
